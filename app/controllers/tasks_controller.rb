@@ -3,6 +3,15 @@ class TasksController < ApplicationController
 
   def index
     @tasks = Task.all
+    @calendar_events = @tasks.map do |task|
+      {
+        title: task.name,
+        start: task.date_from,
+        end: task.date_to,
+        url: task_path(task),
+        className: task.category&.downcase
+      }
+    end
   end
 
   def show

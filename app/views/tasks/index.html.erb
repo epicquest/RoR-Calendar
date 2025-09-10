@@ -24,11 +24,63 @@
 </div>
 
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
+  function initCalendar() {
     const calendarElement = document.getElementById("calendar");
-    calendarElement.innerHTML = "<p>Loading your schedule...</p>";
-    // Calendar initialization will go here
-  });
+    if (!calendarElement || !window.FullCalendar) return;
+
+    // Parse the events data
+    const events = <%= raw @calendar_events.to_json %>;
+
+    const calendar = new window.FullCalendar.Calendar(calendarElement, {
+      initialView: 'dayGridMonth',
+      headerToolbar: false, // We're using our custom header
+      height: 'auto',
+      events: events,
+      eventTimeFormat: {
+        hour: '2-digit',
+        minute: '2-digit',
+        meridiem: false,
+        hour12: false
+      },
+      displayEventTime: true,
+      eventDisplay: 'block',
+      eventClick: function(info) {
+        if (info.event.url) {
+          window.location.href = info.event.url;
+          info.jsEvent.preventDefault();
+        }
+      }
+    });
+
+    calendar.render();
+
+    // Handle custom navigation
+    const prevButton = document.getElementById('prevMonth');
+    const nextButton = document.getElementById('nextMonth');
+    
+    if (prevButton) prevButton.addEventListener('click', () => calendar.prev());
+    if (nextButton) nextButton.addEventListener('click', () => calendar.next());
+    
+    // Update month title
+    const updateMonthTitle = () => {
+      const date = calendar.getDate();
+      const titleElement = document.getElementById('currentMonth');
+      if (titleElement) {
+        titleElement.textContent = date.toLocaleString('default', { month: 'long', year: 'numeric' });
+      }
+    };
+    
+    calendar.on('datesSet', updateMonthTitle);
+    updateMonthTitle();
+  }
+
+  // Make sure the calendar is initialized when the page loads and after Turbo navigation
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCalendar);
+  } else {
+    initCalendar();
+  }
+  document.addEventListener('turbo:render', initCalendar);
 </script>
 
 <div class="table-container mt-8">
@@ -46,19 +98,19 @@
         </tr>
       </thead>
       <tbody>
-        <% @tasks.each do |task| %>
+        <% Task.all.each do |task| %>
           <tr>
             <td>
               <div class="task-name"><%= task.name %></div>
               <div class="task-description text-light"><%= truncate(task.description, length: 50) %></div>
             </td>
             <td>
-              <span class="category-badge <%= task.category.downcase %>"><%= task.category %></span>
+              <span class="category-badge <%= task.category&.downcase %>"><%= task.category %></span>
             </td>
             <td>
               <div class="task-date">
-                <div><%= task.date_from.strftime("%b %d, %Y") %></div>
-                <div class="text-light"><%= task.date_from.strftime("%I:%M %p") %></div>
+                <div><%= task.date_from&.strftime("%b %d, %Y") %></div>
+                <div class="text-light"><%= task.date_from&.strftime("%I:%M %p") %></div>
               </div>
             </td>
             <td class="actions">
