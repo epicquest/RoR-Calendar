@@ -1,29 +1,14 @@
-<h1>Task Details</h1>
+<h1 class="text-primary">Task Details</h1>
 
-<p>
-  <strong>Name:</strong>
-  <%= @task.name %>
-</p>
+<div class="task-details">
+  <p><strong>Name:</strong> <%= @task.name %></p>
+  <p><strong>Category:</strong> <%= @task.category %></p>
+  <p><strong>Start Date:</strong> <%= @task.date_from %></p>
+  <p><strong>End Date:</strong> <%= @task.date_to %></p>
+  <p><strong>Description:</strong> <%= @task.description %></p>
+</div>
 
-<p>
-  <strong>Category:</strong>
-  <%= @task.category %>
-</p>
-
-<p>
-  <strong>Start Date:</strong>
-  <%= @task.date_from %>
-</p>
-
-<p>
-  <strong>End Date:</strong>
-  <%= @task.date_to %>
-</p>
-
-<p>
-  <strong>Description:</strong>
-  <%= @task.description %>
-</p>
-
-<%= link_to 'Edit', edit_task_path(@task) %> |
-<%= link_to 'Back', tasks_path %>
+<div class="actions">
+  <%= link_to 'Edit', edit_task_path(@task), class: 'btn btn-primary' %>
+  <%= link_to 'Back', tasks_path, class: 'btn btn-secondary' %>
+</div>

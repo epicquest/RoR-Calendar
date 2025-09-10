@@ -1,42 +1,85 @@
-<h1>Task Calendar</h1>
+<div class="page-header">
+  <h1>Your Schedule</h1>
+  <p class="text-light">Organize your day, achieve more</p>
+</div>
 
-<div id="calendar">
-  <!-- Calendar implementation using JavaScript will go here -->
+<div class="calendar-container">
+  <div class="calendar-header">
+    <div class="calendar-navigation">
+      <button class="btn btn-icon" id="prevMonth">&larr;</button>
+      <h2 id="currentMonth">September 2025</h2>
+      <button class="btn btn-icon" id="nextMonth">&rarr;</button>
+    </div>
+    <%= link_to new_task_path, class: 'btn-primary' do %>
+      <span>Add New Task</span>
+      <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+      </svg>
+    <% end %>
+  </div>
+
+  <div id="calendar" class="calendar-grid">
+    <!-- Calendar implementation will go here -->
+  </div>
 </div>
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-    // Example: Initialize a simple calendar
     const calendarElement = document.getElementById("calendar");
-    calendarElement.innerHTML = "<p>Calendar will be displayed here</p>";
+    calendarElement.innerHTML = "<p>Loading your schedule...</p>";
+    // Calendar initialization will go here
   });
 </script>
 
-<%= link_to 'New Task', new_task_path, class: 'btn btn-primary' %>
-
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Category</th>
-      <th>Start Date</th>
-      <th>End Date</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @tasks.each do |task| %>
-      <tr>
-        <td><%= task.name %></td>
-        <td><%= task.category %></td>
-        <td><%= task.date_from %></td>
-        <td><%= task.date_to %></td>
-        <td>
-          <%= link_to 'Show', task_path(task) %>
-          <%= link_to 'Edit', edit_task_path(task) %>
-          <%= link_to 'Delete', task_path(task), method: :delete, data: { confirm: 'Are you sure?' } %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<div class="table-container mt-8">
+  <h3 class="mb-4">Upcoming Tasks</h3>
+  <div class="table-responsive">
+    <table>
+      <thead>
+        <tr>
+          <th>Task</th>
+          <th>Category</th>
+          <th>Date & Time</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @tasks.each do |task| %>
+          <tr>
+            <td>
+              <div class="task-name"><%= task.name %></div>
+              <div class="task-description text-light"><%= truncate(task.description, length: 50) %></div>
+            </td>
+            <td>
+              <span class="category-badge <%= task.category.downcase %>"><%= task.category %></span>
+            </td>
+            <td>
+              <div class="task-date">
+                <div><%= task.date_from.strftime("%b %d, %Y") %></div>
+                <div class="text-light"><%= task.date_from.strftime("%I:%M %p") %></div>
+              </div>
+            </td>
+            <td class="actions">
+              <%= link_to task_path(task), class: 'btn-icon' do %>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                </svg>
+              <% end %>
+              <%= link_to edit_task_path(task), class: 'btn-icon' do %>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                </svg>
+              <% end %>
+              <%= link_to task_path(task), method: :delete, data: { confirm: 'Are you sure you want to delete this task?' }, class: 'btn-icon text-error' do %>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                </svg>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,8 +1,14 @@
-<h1>Edit Task</h1>
+<div class="page-header">
+  <h1>Edit Task</h1>
+  <p class="text-light">Update your task details</p>
+</div>
 
-<%= form_with(model: @task, local: true) do |form| %>
+<%= form_with(model: @task, local: true, html: { class: 'form-container' }) do |form| %>
   <% if @task.errors.any? %>
-    <div id="error_explanation">
+    <div class="error-container">
+      <svg class="w-6 h-6 text-error" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
       <h2><%= pluralize(@task.errors.count, "error") %> prohibited this task from being saved:</h2>
       <ul>
         <% @task.errors.full_messages.each do |message| %>
@@ -12,34 +18,34 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= form.label :name %>
-    <%= form.text_field :name %>
+  <div class="form-group">
+    <%= form.label :name, class: 'form-label' %>
+    <%= form.text_field :name, class: 'form-control' %>
   </div>
 
-  <div class="field">
-    <%= form.label :category %>
-    <%= form.text_field :category %>
+  <div class="form-group">
+    <%= form.label :category, class: 'form-label' %>
+    <%= form.text_field :category, class: 'form-control' %>
   </div>
 
-  <div class="field">
-    <%= form.label :date_from %>
-    <%= form.datetime_select :date_from %>
+  <div class="form-group">
+    <%= form.label :date_from, class: 'form-label' %>
+    <%= form.datetime_select :date_from, class: 'form-control' %>
   </div>
 
-  <div class="field">
-    <%= form.label :date_to %>
-    <%= form.datetime_select :date_to %>
+  <div class="form-group">
+    <%= form.label :date_to, class: 'form-label' %>
+    <%= form.datetime_select :date_to, class: 'form-control' %>
   </div>
 
-  <div class="field">
-    <%= form.label :description %>
-    <%= form.text_area :description %>
+  <div class="form-group">
+    <%= form.label :description, class: 'form-label' %>
+    <%= form.text_area :description, class: 'form-control' %>
   </div>
 
   <div class="actions">
-    <%= form.submit %>
+    <%= form.submit 'Update Task', class: 'btn btn-primary' %>
   </div>
 <% end %>
 
-<%= link_to 'Back', tasks_path %>
+<%= link_to 'Back', tasks_path, class: 'btn btn-secondary' %>
